@@ -3,7 +3,7 @@ jobs:
     build:
         working_directory: ~/RubyCircleTest
         docker:
-            - image: circleci/ruby:2.4.1
+            - image: circleci/ruby:3.1.2
             environment:
                 RAILS_ENV: test
     steps:
