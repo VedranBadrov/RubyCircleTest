@@ -1,10 +1,20 @@
+version: 2.1
+
 jobs:
   build:
     docker:
-      - image: cimg/ruby:3.2.1
+      - image: circleci/ruby:3.1.4-buster
     steps:
       - checkout
-      - run: ruby --version
-    steps:
-        - checkout
-
+      - run: gem install bundler
+      - restore_cache:
+          keys:
+            - gem-cache-{{ checksum "Gemfile.lock" }}
+            - gem-cache-
+      - run: bundle install --path vendor/bundle
+      - save_cache:
+          paths:
+            - vendor/bundle
+          key: gem-cache-{{ checksum "Gemfile.lock" }}
+      - run: bundle exec rake db:create db:migrate RAILS_ENV=test
+      - run: bundle exec rspec
